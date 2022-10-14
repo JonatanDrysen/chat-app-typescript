@@ -1,4 +1,4 @@
-export interface MessageItem {
+export default interface MessageItem {
     _id?: string,
     text: string,
     author: string,
