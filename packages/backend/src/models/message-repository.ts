@@ -1,4 +1,4 @@
-// import MessageItem from "@my-chat-app-typescript/shared"
+import MessageItem from "@my-chat-app-typescript/shared"
 import { model, Schema } from "mongoose"
 
 const messageSchema = new Schema({
@@ -7,4 +7,4 @@ const messageSchema = new Schema({
     timeStamp: String
 })
 
-// const MessageModel = model<MessageItem>("MessageItem", messageSchema)
+const MessageModel = model<MessageItem>("MessageItem", messageSchema)

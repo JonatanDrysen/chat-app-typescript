@@ -5,11 +5,11 @@ import "../styles/Home.css"
 
 import { SendButton, TextInput } from "../components/styled/InputForm.styled"
 import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
-import { Message } from "../../../shared/src/Message"
+import MessageItem from "@my-chat-app-typescript/shared"
 
 function HomePage() {
   const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<MessageItem[]>([])
 
   const sendMessage = (messageText:string) => {
     const newMessage = {
