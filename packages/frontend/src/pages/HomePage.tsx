@@ -5,21 +5,15 @@ import "../styles/Home.css"
 
 import { SendButton, TextInput } from "../components/styled/InputForm.styled"
 import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
+import { Message } from "../../../shared/src/Message"
 
 function HomePage() {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
 
-  interface Message {
-    id: string,
-    text: string,
-    author: string,
-    timeStamp: string
-  }
-
   const sendMessage = (messageText:string) => {
     const newMessage = {
-      id: uuidv4(),
+      _id: uuidv4(),
       text: messageText,
       author: "jonatandrysen", // TODO: add store username through JWT
       timeStamp: new Date().toLocaleString()
@@ -37,7 +31,7 @@ function HomePage() {
       <div className="Home-messageList">
         {messages.map(message => { // TODO: Incoming chat bubbles are grey & float left
           return (
-            <Post key={message.id}>
+            <Post key={message._id}>
               <Author>{message.author}</Author>
               <TimeStamp>{message.timeStamp}</TimeStamp>
               <Text>{message.text}</Text>
