@@ -1,26 +1,50 @@
-import React from 'react';
-import { useState } from "react"
-import { v4 as uuidv4 } from "uuid"
-import "../styles/Home.css"
+import { useEffect, useState } from "react"
+import axios from "axios"
 
+import MessageItem from "@my-chat-app-typescript/shared"
+import "../styles/Home.css"
 import { SendButton, TextInput } from "../components/styled/InputForm.styled"
 import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
-import MessageItem from "@my-chat-app-typescript/shared"
+
+axios.defaults.baseURL = `http://localhost:3001`
+
+const fetchMessages = async (): Promise<MessageItem[]>  => {
+  const response = await axios.get<MessageItem[]>("/mychats")
+  return response.data
+}
 
 function HomePage() {
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState<MessageItem[]>([])
-
-  const sendMessage = (messageText:string) => {
-    const newMessage = {
-      _id: uuidv4(),
-      text: messageText,
-      author: "jonatandrysen", // TODO: add store username through JWT
-      timeStamp: new Date().toLocaleString()
+  const [message, setMessage] = useState<string>("")
+  const [messageList, setMessageList] = useState<MessageItem[]>([])
+  const [error, setError] = useState<string | undefined>()
+  
+  const sendMessage = async (message: string): Promise<void> => {
+    const messageItem: MessageItem = {
+      text: message,
+      author: "messageAuthor",
+      timeStamp: new Date() 
     }
-    setMessages([...messages, newMessage])
-    setMessage("")
+
+    try {
+      await axios.post("/mychats", messageItem)
+      const response = await axios.get<MessageItem[]>("/mychats")
+      setMessageList(response.data)
+    } catch (err) {
+      setMessageList([])
+      setError("Tried retrieving chat history but caught error instead...")
+    } finally {
+      setMessage("")
+    }
   }
+
+  useEffect(() => {
+    fetchMessages()
+      .then(setMessageList)
+      .catch((_error) => {
+        setMessageList([])
+        setError("fetchMessages() couldn't fetch any messages...")
+      })
+  }, [])
 
   return (
     <div className="Home">
@@ -29,15 +53,15 @@ function HomePage() {
       </header>
 
       <div className="Home-messageList">
-        {messages.map(message => { // TODO: Incoming chat bubbles are grey & float left
+        {messageList ? messageList.map(message => { // TODO: Incoming chat bubbles are grey & float left
           return (
-            <Post key={message._id}>
+            <Post key={message.id}>
               <Author>{message.author}</Author>
-              <TimeStamp>{message.timeStamp}</TimeStamp>
+              <TimeStamp>{message.timeStamp.toString()}</TimeStamp>
               <Text>{message.text}</Text>
             </Post>
           )
-        })}
+        }) : error ? error : "Loading chat..."}
       </div>
 
       <div className="Home-form">
@@ -46,7 +70,7 @@ function HomePage() {
           value={message} 
           onChange={(e) => setMessage(e.target.value)}
         />
-        <SendButton onClick={(e) => sendMessage(message)}>
+        <SendButton onClick={(_e) => sendMessage(message)}>
           Send
         </SendButton>
       </div>
@@ -55,3 +79,4 @@ function HomePage() {
 }
 
 export default HomePage;
+

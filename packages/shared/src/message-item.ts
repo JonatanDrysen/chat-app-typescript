@@ -1,6 +1,6 @@
 export default interface MessageItem {
-    _id?: string,
+    id?: string,
     text: string,
     author: string,
-    timeStamp: string
+    timeStamp: Date
 }
