@@ -4,7 +4,8 @@ import axios from "axios"
 
 import { MessageItem } from "@my-chat-app-typescript/shared"
 import "../styles/Home.css"
-import { SendButton, TextInput } from "../components/styled/InputForm.styled"
+import { TextInput } from "../components/styled/InputForm.styled"
+import { Button } from "../components/styled/Button.styled"
 import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
 import { Error } from "../components/styled/Error.styled"
 
@@ -80,9 +81,9 @@ function HomePage() {
           value={message} 
           onChange={(e) => setMessage(e.target.value)}
         />
-        <SendButton onClick={(_e) => sendMessage(message)}>
+        <Button onClick={(_e) => sendMessage(message)}>
           Send
-        </SendButton>
+        </Button>
       </div>
     </div>
   );

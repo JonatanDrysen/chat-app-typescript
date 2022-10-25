@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { SendButton, TextInput } from '../components/styled/InputForm.styled'
+import { TextInput } from '../components/styled/InputForm.styled'
+import { Button } from '../components/styled/Button.styled'
 import { Error } from "../components/styled/Error.styled"
 import "../styles/Login.css"
 
@@ -39,7 +40,7 @@ function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
             />
 
-            <SendButton onClick={(_e) => handleLogin(username)}>Go!</SendButton>
+            <Button onClick={(_e) => handleLogin(username)}>Go!</Button>
         </div>
     )
 }
