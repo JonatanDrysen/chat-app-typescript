@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
+import { Navigate, useNavigate } from "react-router-dom"
 import axios from "axios"
 
-import MessageItem from "@my-chat-app-typescript/shared"
+import { MessageItem } from "@my-chat-app-typescript/shared"
 import "../styles/Home.css"
 import { SendButton, TextInput } from "../components/styled/InputForm.styled"
 import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
+import { Error } from "../components/styled/Error.styled"
 
 axios.defaults.baseURL = `http://localhost:3001`
 
@@ -13,15 +15,22 @@ const fetchMessages = async (): Promise<MessageItem[]>  => {
   return response.data
 }
 
+
 function HomePage() {
   const [message, setMessage] = useState<string>("")
   const [messageList, setMessageList] = useState<MessageItem[]>([])
+  const [author, setAuthor] = useState<string>("USER")
   const [error, setError] = useState<string | undefined>()
+  const navigate = useNavigate()
   
-  const sendMessage = async (message: string): Promise<void> => {
+  const setAuthorName = () => {
+    return setAuthor(localStorage.getItem("User") || "")
+  }
+  
+  const sendMessage = async (message: string): Promise<void> => { // TODO: User cannot send empty string or " "
     const messageItem: MessageItem = {
       text: message,
-      author: "messageAuthor",
+      author: author,
       timeStamp: new Date() 
     }
 
@@ -40,16 +49,17 @@ function HomePage() {
   useEffect(() => {
     fetchMessages()
       .then(setMessageList)
+      .then(setAuthorName)
       .catch((_error) => {
         setMessageList([])
-        setError("fetchMessages() couldn't fetch any messages...")
+        setError("Couldn't fetch any messages...")
       })
   }, [])
 
   return (
     <div className="Home">
       <header className="Home-header">
-        My Chat App
+        Logged in as {author}
       </header>
 
       <div className="Home-messageList">
@@ -61,7 +71,7 @@ function HomePage() {
               <Text>{message.text}</Text>
             </Post>
           )
-        }) : error ? error : "Loading chat..."}
+        }) : error ? <Error>{error}</Error> : "Loading chat..."}
       </div>
 
       <div className="Home-form">
