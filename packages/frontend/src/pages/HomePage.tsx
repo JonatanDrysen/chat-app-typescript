@@ -16,7 +16,6 @@ const fetchMessages = async (): Promise<MessageItem[]>  => {
   return response.data
 }
 
-
 function HomePage() {
   const [message, setMessage] = useState<string>("")
   const [messageList, setMessageList] = useState<MessageItem[]>([])
@@ -26,6 +25,11 @@ function HomePage() {
   
   const setAuthorName = () => {
     return setAuthor(localStorage.getItem("User") || "")
+  }
+  
+  const handleLogout = () => {
+    localStorage.removeItem("User")
+    navigate("/login")
   }
   
   const sendMessage = async (message: string): Promise<void> => { // TODO: User cannot send empty string or " "
@@ -59,9 +63,14 @@ function HomePage() {
 
   return (
     <div className="Home">
-      <header className="Home-header">
-        Logged in as {author}
-      </header>
+        <header className="Home-header">
+          <div className="Home-header-button">
+            <Button onClick={(e) => handleLogout()}>Log out</Button>
+          </div>
+          <div className="Home-header-text">          
+            Logged in as {author}
+          </div>
+        </header>
 
       <div className="Home-messageList">
         {messageList ? messageList.map(message => { // TODO: Incoming chat bubbles are grey & float left
@@ -78,6 +87,8 @@ function HomePage() {
       <div className="Home-form">
         <TextInput 
           placeholder="type something"
+          minLength={5}
+          maxLength={10}
           value={message} 
           onChange={(e) => setMessage(e.target.value)}
         />
