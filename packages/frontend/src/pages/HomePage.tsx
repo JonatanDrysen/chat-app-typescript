@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 import { MessageItem } from "@my-chat-app-typescript/shared"
@@ -32,11 +32,11 @@ function HomePage() {
     navigate("/login")
   }
   
-  const sendMessage = async (message: string): Promise<void> => { // TODO: User cannot send empty string or " "
+  const sendMessage = async (message: string): Promise<void> => {
     const messageItem: MessageItem = {
       text: message,
       author: author,
-      timeStamp: new Date() 
+      timeStamp: new Date()
     }
 
     try {
@@ -65,7 +65,7 @@ function HomePage() {
     <div className="Home">
         <header className="Home-header">
           <div className="Home-header-button">
-            <Button onClick={(e) => handleLogout()}>Log out</Button>
+            <Button onClick={(_e) => handleLogout()}>Log out</Button>
           </div>
           <div className="Home-header-text">          
             Logged in as {author}
@@ -81,18 +81,20 @@ function HomePage() {
               <Text>{message.text}</Text>
             </Post>
           )
-        }) : error ? <Error>{error}</Error> : "Loading chat..."}
+        }) : error ? error : "Loading chat..."}
+        <Error>{error}</Error>
       </div>
 
       <div className="Home-form">
         <TextInput 
           placeholder="type something"
-          minLength={5}
-          maxLength={10}
           value={message} 
           onChange={(e) => setMessage(e.target.value)}
         />
-        <Button onClick={(_e) => sendMessage(message)}>
+        <Button 
+          onClick={(_e) => sendMessage(message)}
+          disabled={!message}
+        >
           Send
         </Button>
       </div>
