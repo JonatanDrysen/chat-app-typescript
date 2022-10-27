@@ -19,10 +19,10 @@ const fetchMessages = async (): Promise<MessageItem[]>  => {
 function HomePage() {
   const [message, setMessage] = useState<string>("")
   const [messageList, setMessageList] = useState<MessageItem[]>([])
-  const [author, setAuthor] = useState<string>("USER")
+  const [author, setAuthor] = useState<string>("")
   const [error, setError] = useState<string | undefined>()
   const navigate = useNavigate()
-  
+
   const setAuthorName = () => {
     return setAuthor(localStorage.getItem("User") || "")
   }
@@ -63,7 +63,7 @@ function HomePage() {
 
   return (
     <div className="Home">
-        <header className="Home-header">
+        <header className="Home-header"> {/* TODO: Make header sticky */}
           <div className="Home-header-button">
             <Button onClick={(_e) => handleLogout()}>Log out</Button>
           </div>
@@ -77,7 +77,11 @@ function HomePage() {
           return (
             <Post key={message.id}>
               <Author>{message.author}</Author>
-              <TimeStamp>{message.timeStamp.toString()}</TimeStamp>
+              <TimeStamp>
+                {message.timeStamp.toString().split("T")[0]}
+                {" "}
+                {message.timeStamp.toString().split("T")[1].substring(0, 8)}
+              </TimeStamp>
               <Text>{message.text}</Text>
             </Post>
           )
