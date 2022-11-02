@@ -7,9 +7,9 @@ import { Error } from "../components/styled/Error.styled"
 import "../styles/Login.css"
 
 function LoginPage() {
+    const navigate = useNavigate()
     const [username, setUsername] = useState("")
     const [error, setError] = useState<string | undefined>()
-    const navigate = useNavigate()
     
     const handleLogin= async (username: string) => {
         if (username.length < 3 || username.length > 20) {
@@ -18,7 +18,6 @@ function LoginPage() {
             setError("")
             try {
                 localStorage.setItem("User", username)
-                console.log("got stored username:", localStorage.getItem("User"))
                 navigate("/mychats")
             } catch (err) {
                 console.error("could not get stored username")

@@ -4,8 +4,8 @@ import dotenv from "dotenv"
 import cors from "cors"
 
 import { MessageItem } from "@my-chat-app-typescript/shared"
-import { setupDB } from "./models/db"
 import { loadMessageList, saveNewMessage } from "./models/message-repository"
+import { setupDB } from "./models/db"
 
 dotenv.config()
 

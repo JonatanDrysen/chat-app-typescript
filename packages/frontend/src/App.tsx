@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 
-import HomePage from './pages/HomePage';
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage"
+import HomePage from './pages/HomePage'
 
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
     </Routes>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

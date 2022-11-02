@@ -1,5 +1,5 @@
-import { MessageItem } from "@my-chat-app-typescript/shared"
 import { model, Schema } from "mongoose"
+import { MessageItem } from "@my-chat-app-typescript/shared"
 
 const MessageSchema = new Schema({
     text: String,

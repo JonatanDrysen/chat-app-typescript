@@ -4,9 +4,9 @@ import axios from "axios"
 
 import { MessageItem } from "@my-chat-app-typescript/shared"
 import "../styles/Home.css"
+import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
 import { TextInput } from "../components/styled/InputForm.styled"
 import { Button } from "../components/styled/Button.styled"
-import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
 import { Error } from "../components/styled/Error.styled"
 
 axios.defaults.baseURL = `http://localhost:3001`
@@ -19,8 +19,8 @@ const fetchMessages = async (): Promise<MessageItem[]>  => {
 function HomePage() {
   const navigate = useNavigate()
   const endMessagesRef = useRef<null | HTMLDivElement>(null)
-  const [message, setMessage] = useState<string>("")
   const [messageList, setMessageList] = useState<MessageItem[]>([])
+  const [message, setMessage] = useState<string>("")
   const [author, setAuthor] = useState<string>("")
   const [error, setError] = useState<string | undefined>()
 
@@ -86,7 +86,7 @@ function HomePage() {
 
   return (
     <div className="Home">
-        <header className="Home-header"> {/* TODO: Make header sticky */}
+        <header className="Home-header">
           <div className="Home-header-button">
             <Button onClick={(_e) => handleLogout()}>Log out</Button>
           </div>
@@ -96,7 +96,7 @@ function HomePage() {
         </header>
 
       <div className="Home-messageList">
-        {messageList ? messageList.map(message => { // TODO: Incoming chat bubbles are grey & float left
+        {messageList ? messageList.map(message => {
           return (
             <Post key={message.id}>
               <Author>{message.author}</Author>
@@ -127,8 +127,7 @@ function HomePage() {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 export default HomePage
-
