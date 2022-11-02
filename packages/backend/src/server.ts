@@ -24,10 +24,8 @@ app.get("/mychats", async (_req: Request, res: Response<MessageItem[]>) => {
 app.post("/mychats", async (req: Request<MessageItem>, res: Response<MessageItem[]>) => {
     const messageItem = req.body
     messageItem.id = crypto.randomUUID()
-    const savedItem = await saveNewMessage(messageItem)
+    await saveNewMessage(messageItem)
     const newMessageList = await loadMessageList()
-        console.log("saved new message:", savedItem)
-        console.log("New message list:", newMessageList)
     res.send(newMessageList)
 })
 

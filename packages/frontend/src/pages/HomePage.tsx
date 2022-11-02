@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
@@ -17,11 +17,12 @@ const fetchMessages = async (): Promise<MessageItem[]>  => {
 }
 
 function HomePage() {
+  const navigate = useNavigate()
+  const endMessagesRef = useRef<null | HTMLDivElement>(null)
   const [message, setMessage] = useState<string>("")
   const [messageList, setMessageList] = useState<MessageItem[]>([])
   const [author, setAuthor] = useState<string>("")
   const [error, setError] = useState<string | undefined>()
-  const navigate = useNavigate()
 
   const setAuthorName = () => {
     return setAuthor(localStorage.getItem("User") || "")
@@ -63,11 +64,25 @@ function HomePage() {
     fetchMessages()
       .then(setMessageList)
       .then(setAuthorName)
-      .catch((_error) => {
+      .catch((_err) => {
         setMessageList([])
         setError("Couldn't fetch any messages...")
       })
+
+    const interval = setInterval(() => {
+      fetchMessages()
+        .then(setMessageList)
+        .catch((_err) => {
+          setMessageList([])
+          setError("Couldn't fetch any messages...")
+        })
+    }, 2000)
+    return clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    endMessagesRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messageList])
 
   return (
     <div className="Home">
@@ -95,6 +110,7 @@ function HomePage() {
           )
         }) : error ? error : "Loading chat..."}
         <Error>{error}</Error>
+        <div ref={endMessagesRef}></div>
       </div>
 
       <div className="Home-form">
