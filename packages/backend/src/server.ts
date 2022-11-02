@@ -1,11 +1,11 @@
 import express, { Application, json, Request, Response } from "express"
+import crypto from "crypto"
 import dotenv from "dotenv"
 import cors from "cors"
 
-import MessageItem from "@my-chat-app-typescript/shared"
+import { MessageItem } from "@my-chat-app-typescript/shared"
 import { setupDB } from "./models/db"
 import { loadMessageList, saveNewMessage } from "./models/message-repository"
-import crypto from "crypto"
 
 dotenv.config()
 
@@ -26,8 +26,8 @@ app.post("/mychats", async (req: Request<MessageItem>, res: Response<MessageItem
     messageItem.id = crypto.randomUUID()
     const savedItem = await saveNewMessage(messageItem)
     const newMessageList = await loadMessageList()
-    console.log("saved new message:", savedItem)
-    console.log("New message list:", newMessageList)
+        console.log("saved new message:", savedItem)
+        console.log("New message list:", newMessageList)
     res.send(newMessageList)
 })
 

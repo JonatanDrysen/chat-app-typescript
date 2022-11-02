@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
-import MessageItem from "@my-chat-app-typescript/shared"
+import { MessageItem } from "@my-chat-app-typescript/shared"
 import "../styles/Home.css"
-import { SendButton, TextInput } from "../components/styled/InputForm.styled"
+import { TextInput } from "../components/styled/InputForm.styled"
+import { Button } from "../components/styled/Button.styled"
 import { Author, Post, Text, TimeStamp } from "../components/styled/Posts.styled"
+import { Error } from "../components/styled/Error.styled"
 
 axios.defaults.baseURL = `http://localhost:3001`
 
@@ -16,13 +19,24 @@ const fetchMessages = async (): Promise<MessageItem[]>  => {
 function HomePage() {
   const [message, setMessage] = useState<string>("")
   const [messageList, setMessageList] = useState<MessageItem[]>([])
+  const [author, setAuthor] = useState<string>("")
   const [error, setError] = useState<string | undefined>()
+  const navigate = useNavigate()
+
+  const setAuthorName = () => {
+    return setAuthor(localStorage.getItem("User") || "")
+  }
+  
+  const handleLogout = () => {
+    localStorage.removeItem("User")
+    navigate("/login")
+  }
   
   const sendMessage = async (message: string): Promise<void> => {
     const messageItem: MessageItem = {
       text: message,
-      author: "messageAuthor",
-      timeStamp: new Date() 
+      author: author,
+      timeStamp: new Date()
     }
 
     try {
@@ -38,30 +52,49 @@ function HomePage() {
   }
 
   useEffect(() => {
+    const checkedUser = localStorage.getItem("User")
+    if (checkedUser === "" || checkedUser === null) {
+      setMessageList([])
+      navigate("/login")
+    }
+  }, [navigate])
+
+  useEffect(() => {
     fetchMessages()
       .then(setMessageList)
+      .then(setAuthorName)
       .catch((_error) => {
         setMessageList([])
-        setError("fetchMessages() couldn't fetch any messages...")
+        setError("Couldn't fetch any messages...")
       })
   }, [])
 
   return (
     <div className="Home">
-      <header className="Home-header">
-        My Chat App
-      </header>
+        <header className="Home-header"> {/* TODO: Make header sticky */}
+          <div className="Home-header-button">
+            <Button onClick={(_e) => handleLogout()}>Log out</Button>
+          </div>
+          <div className="Home-header-text">          
+            Logged in as {author}
+          </div>
+        </header>
 
       <div className="Home-messageList">
         {messageList ? messageList.map(message => { // TODO: Incoming chat bubbles are grey & float left
           return (
             <Post key={message.id}>
               <Author>{message.author}</Author>
-              <TimeStamp>{message.timeStamp.toString()}</TimeStamp>
+              <TimeStamp>
+                {message.timeStamp.toString().split("T")[0]}
+                {" "}
+                {message.timeStamp.toString().split("T")[1].substring(0, 8)}
+              </TimeStamp>
               <Text>{message.text}</Text>
             </Post>
           )
         }) : error ? error : "Loading chat..."}
+        <Error>{error}</Error>
       </div>
 
       <div className="Home-form">
@@ -70,13 +103,16 @@ function HomePage() {
           value={message} 
           onChange={(e) => setMessage(e.target.value)}
         />
-        <SendButton onClick={(_e) => sendMessage(message)}>
+        <Button 
+          onClick={(_e) => sendMessage(message)}
+          disabled={!message}
+        >
           Send
-        </SendButton>
+        </Button>
       </div>
     </div>
   );
 }
 
-export default HomePage;
+export default HomePage
 
