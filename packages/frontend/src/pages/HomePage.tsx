@@ -52,6 +52,14 @@ function HomePage() {
   }
 
   useEffect(() => {
+    const checkedUser = localStorage.getItem("User")
+    if (checkedUser === "" || checkedUser === null) {
+      setMessageList([])
+      navigate("/login")
+    }
+  }, [navigate])
+
+  useEffect(() => {
     fetchMessages()
       .then(setMessageList)
       .then(setAuthorName)
