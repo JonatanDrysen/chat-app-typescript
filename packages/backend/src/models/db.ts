@@ -1,5 +1,11 @@
 import { connect } from "mongoose"
 
 export const setupDB = async (url: string) => {
-   await connect(url)
+   try {
+      console.info(`Setup MongoDB connection to ${url}!`)
+      await connect(url)
+  } catch (e) {
+      console.error("Error connecting to MongoDB!", e)
+      throw e
+  }
 }

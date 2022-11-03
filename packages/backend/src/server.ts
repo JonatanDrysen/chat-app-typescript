@@ -13,8 +13,8 @@ const app: Application = express()
 app.use(cors())
 app.use(json())
  
-const port: number = parseInt(process.env.SERVER_PORT || "3001")
-const mongoURL = process.env.MONGO_URL || "mongodb://127.0.0.1/mychats"
+const port: number = parseInt(process.env.SERVER_PORT || "4000")
+const mongoURL = process.env.MONGO_URL || ""
 
 app.get("/mychats", async (_req: Request, res: Response<MessageItem[]>) => {
     const messageItems = await loadMessageList()

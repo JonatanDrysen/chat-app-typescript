@@ -9,7 +9,7 @@ import { TextInput } from "../components/styled/InputForm.styled"
 import { Button } from "../components/styled/Button.styled"
 import { Error } from "../components/styled/Error.styled"
 
-axios.defaults.baseURL = `http://localhost:3001`
+axios.defaults.baseURL = process.env.REACT_APP_CHAT_API || "http://localhost:3001"
 
 const fetchMessages = async (): Promise<MessageItem[]>  => {
   const response = await axios.get<MessageItem[]>("/mychats")
